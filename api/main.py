@@ -14,11 +14,13 @@ app = FastAPI(
 
 # Modelo de entrada (JSON do Flutter)
 class FuelRequest(BaseModel):
+    year: int              # ano do veículo
+    make: str              # fabricante do veículo
+    model: str             # modelo do veículo
     enginesize: float      # tamanho do motor (ex: 2.0)
     cylinders: int         # número de cilindros
     vehicleclass: str      # classe do veículo, ex: "SUV", "COMPACT"
-    transmission: str      # ex: "A6", "M5"
-    fueltype: str          # ex: "Z", "X", "D", "E"
+    fuel: str          # ex: "Z", "X", "D", "E"
     distance_km: float | None = None  # opcional: distância da viagem
 
 
@@ -38,11 +40,13 @@ def read_root():
 def predict_consumption(request: FuelRequest):
     # Monta um DataFrame com as colunas esperadas pelo modelo
     df = pd.DataFrame([{
-        "ENGINESIZE": request.enginesize,
+        "YEAR": request.year,
+        "MAKE": request.make,
+        "MODEL": request.model,
+        "ENGINE SIZE": request.enginesize,
         "CYLINDERS": request.cylinders,
-        "VEHICLECLASS": request.vehicleclass,
-        "TRANSMISSION": request.transmission,
-        "FUELTYPE": request.fueltype
+        "VEHICLE CLASS": request.vehicleclass,
+        "FUEL": request.fuel
     }])
 
     # Faz a previsão em L/100km
